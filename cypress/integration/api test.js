@@ -1,4 +1,4 @@
-describe('This test will register a new user, login with that user, create a gallery and performa a search', () => {
+describe('This test will register a new user, login with that user, create a gallery, search for it, edit it and delete it', () => {
     it('Create a new user', () => {
         Cypress.env('RandomMail', `apitest${Cypress._.random(0, 1e6)}@yopmail.com`)
         cy.request({
@@ -48,7 +48,7 @@ describe('This test will register a new user, login with that user, create a gal
             },
             body: {
                 "title": Cypress.env('GalleryName'),
-                "description": "testing",
+                "description": "This is initial description",
                 "images": [
                     "https://asia.olympus-imaging.com/content/000107506.jpg"
                 ]
@@ -59,9 +59,11 @@ describe('This test will register a new user, login with that user, create a gal
                 expect(response.body).to.have.all.keys(
                     'title', 'description', 'user_id', 'id', 'updated_at', 'created_at'
                 )
+                Cypress.env('InitialDescription', response.body.description)
+                Cypress.env('GalleryID', response.body.id)
             });
     });
-    it('Perform search on gallery we made', () => {
+    it('Perform a search and find gallery we made', () => {
         cy.request({
             method: 'GET',
             url: '/api/galleries',
@@ -81,6 +83,62 @@ describe('This test will register a new user, login with that user, create a gal
                         'id', 'title', 'description', 'user_id', 'created_at', 'updated_at', 'user', 'images'
                     )
                 })
+                expect(response.body.galleries[0].description).to.eq(Cypress.env('InitialDescription'))
+                expect(response.body.galleries[0].id).to.eq(Cypress.env('GalleryID'))
+            });
+    });
+    it('Edit description on the gallery we made', () => {
+        cy.request({
+            method: 'PUT',
+            url: '/api/galleries/' + Cypress.env('GalleryID'),
+            headers: {
+                "Authorization": "Bearer " + Cypress.env('AccessToken')
+            },
+            body: {
+                "title": Cypress.env('GalleryName'),
+                "description": "This is edited description",
+                "images": [
+                    "https://asia.olympus-imaging.com/content/000107506.jpg"
+                ]
+            }
+        })
+            .then((response) => {
+                expect(response.status).eq(200)
+                expect(response.body).to.have.all.keys(
+                    'title', 'description', 'user_id', 'id', 'updated_at', 'created_at'
+                )
+                expect(response.body.description).to.eq('This is edited description')
+                expect(response.body.id).to.eq(Cypress.env('GalleryID'))
+            });
+    });
+    it('Delete the gallery we made', () => {
+        cy.request({
+            method: 'Delete',
+            url: '/api/galleries/' + Cypress.env('GalleryID'),
+            headers: {
+                "Authorization": "Bearer " + Cypress.env('AccessToken')
+            }
+        })
+            .then((response) => {
+                expect(response.status).eq(200)
+                expect(response.body).to.eq('1')
+            });
+    });
+    it('Perform another search on the galery we deleted to make sure it is no longer there', () => {
+        cy.request({
+            method: 'GET',
+            url: '/api/galleries',
+            qs: {
+                page: '1',
+                term: Cypress.env('GalleryName')
+            },
+            headers: {
+                "Authorization": "Bearer " + Cypress.env('AccessToken')
+            }
+        })
+            .then((response) => {
+                expect(response.status).eq(200)
+                expect(response.body.count).to.eq(0)                
             });
     });
 
