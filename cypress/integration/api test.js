@@ -141,5 +141,17 @@ describe('This test will register a new user, login with that user, create a gal
                 expect(response.body.count).to.eq(0)                
             });
     });
-
+    it('Do a 404 call and expect 404', () => {
+        cy.request({
+            method: 'POST',
+            url: '/example',
+            body: {
+                key: 'Value'
+            },
+            failOnStatusCode: false
+        })
+            .then((response) => {
+                expect(response.status).to.eq(404)
+            });
+    });
 });
