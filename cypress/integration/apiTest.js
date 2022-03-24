@@ -1,9 +1,10 @@
-describe('This test will register a new user, login with that user, create a gallery, search for it, edit it and delete it', () => {
+describe('API test for register/login/create a gallery/search/edit/delete a gallery', () => {
+    Cypress.env('baseUrl', `https://gallery-api.vivifyideas.com`) // base URL for api calls
     it('Create a new user', () => {
         Cypress.env('RandomMail', `apitest${Cypress._.random(0, 1e6)}@yopmail.com`)
         cy.request({
             method: 'POST',
-            url: '/api/auth/register',
+            url: Cypress.env('baseUrl') + '/api/auth/register',
             body: {
                 "first_name": "Testerko",
                 "last_name": "Test",
@@ -23,7 +24,7 @@ describe('This test will register a new user, login with that user, create a gal
     it('Log in with created user', () => {
         cy.request({
             method: 'POST',
-            url: '/api/auth/login',
+            url: Cypress.env('baseUrl') + '/api/auth/login',
             body: {
                 "email": Cypress.env('RandomMail'),
                 "password": "Test1234"
@@ -42,7 +43,7 @@ describe('This test will register a new user, login with that user, create a gal
         Cypress.env('GalleryName', `Gallery ${Cypress._.random(0, 1e6)}`)
         cy.request({
             method: 'POST',
-            url: '/api/galleries',
+            url: Cypress.env('baseUrl') + '/api/galleries',
             headers: {
                 "Authorization": "Bearer " + Cypress.env('AccessToken')
             },
@@ -66,7 +67,7 @@ describe('This test will register a new user, login with that user, create a gal
     it('Perform a search and find gallery we made', () => {
         cy.request({
             method: 'GET',
-            url: '/api/galleries',
+            url: Cypress.env('baseUrl') + '/api/galleries',
             qs: {
                 page: '1',
                 term: Cypress.env('GalleryName')
@@ -90,7 +91,7 @@ describe('This test will register a new user, login with that user, create a gal
     it('Edit description on the gallery we made', () => {
         cy.request({
             method: 'PUT',
-            url: '/api/galleries/' + Cypress.env('GalleryID'),
+            url: Cypress.env('baseUrl') + '/api/galleries/' + Cypress.env('GalleryID'),
             headers: {
                 "Authorization": "Bearer " + Cypress.env('AccessToken')
             },
@@ -114,7 +115,7 @@ describe('This test will register a new user, login with that user, create a gal
     it('Delete the gallery we made', () => {
         cy.request({
             method: 'Delete',
-            url: '/api/galleries/' + Cypress.env('GalleryID'),
+            url: Cypress.env('baseUrl') + '/api/galleries/' + Cypress.env('GalleryID'),
             headers: {
                 "Authorization": "Bearer " + Cypress.env('AccessToken')
             }
@@ -127,7 +128,7 @@ describe('This test will register a new user, login with that user, create a gal
     it('Perform another search on the galery we deleted to make sure it is no longer there', () => {
         cy.request({
             method: 'GET',
-            url: '/api/galleries',
+            url: Cypress.env('baseUrl') + '/api/galleries',
             qs: {
                 page: '1',
                 term: Cypress.env('GalleryName')
@@ -144,7 +145,7 @@ describe('This test will register a new user, login with that user, create a gal
     it('Do a 404 call and expect 404', () => {
         cy.request({
             method: 'POST',
-            url: '/example',
+            url: Cypress.env('baseUrl') + '/example',
             body: {
                 key: 'Value'
             },

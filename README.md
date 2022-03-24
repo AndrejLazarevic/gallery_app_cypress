@@ -1,1 +1,3 @@
-Playground for API automation in Cypress
+Frontend and API Cypress tests for automating basic Gallery Web Application.
+
+More info to come...
