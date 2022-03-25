@@ -9,7 +9,7 @@ import testData from '../data/testData.js';
 const register = new registerActions();
 const navigate = new navigationActions();
 
-describe('Test all login scenarios', () => {
+describe('Test all register scenarios', () => {
     beforeEach(() => {    
         navigate.clearCookies();
         navigate.visitRegister();

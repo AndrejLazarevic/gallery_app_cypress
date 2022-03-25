@@ -22,6 +22,10 @@ class createGalleryActions {
 		cy.get(createGalleryLocators.imagesInput).eq(2).type(image2)
 		cy.get(createGalleryLocators.submitButton).click()
 	}
+	addImage(image1) {
+		cy.get(createGalleryLocators.imagesInput).eq(0).type(image1)
+		cy.get(createGalleryLocators.addImageButton).click()
+    }
 }
 
 export default createGalleryActions;
