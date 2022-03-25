@@ -4,6 +4,7 @@ import registerActions from '../actions/registerActions.js';
 import navigationActions from '../actions/navigationActions.js';
 import errors from '../data/errors.js';
 import accounts from '../data/accounts.js';
+import testData from '../data/testData.js';
 
 const register = new registerActions();
 const navigate = new navigationActions();
@@ -67,7 +68,7 @@ describe('Test all login scenarios', () => {
         cy.get(registerLocators.errorMessage).eq(1).should('have.text', errors.passdordsDoNotMatch)
     });
     it('Register a new account with valid data', () => {
-        register.registerWithTerms(`Firstname ${Cypress._.random(0, 1e6)}`, `Lastname ${Cypress._.random(0, 1e6)}`, `testoje${Cypress._.random(0, 1e6)}@yopmail.com`, 'Test1234', 'Test1234')
+        register.registerWithTerms(testData.randomFirstName, testData.randomLastName, testData.randomEmail, 'Test1234', 'Test1234')
         cy.get(globalLocators.logoutButton).should('exist')
         cy.get(globalLocators.loginButton).should('not.exist')
         cy.get(globalLocators.registerButton).should('not.exist')

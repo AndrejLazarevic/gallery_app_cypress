@@ -9,5 +9,8 @@ export default {
     addImageButton: 'button:contains("Add image")',
     submitButton: 'button:contains("Submit")',
     cancelButton: 'button:contains("Cancel")',
-    errorMessage: 'p.alert-danger'
+    errorMessage: 'p.alert-danger',
+    deleteImageButton: 'button:has(.fa-trash)',
+    moveImageUpButton: 'button:has(.fa-chevron-circle-up)',
+    moveImageDownButton: 'button:has(.fa-chevron-circle-down)'
 }
