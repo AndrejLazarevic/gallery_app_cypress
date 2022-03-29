@@ -1,6 +1,6 @@
 describe('API test for register/login/create a gallery/search/edit/delete a gallery', () => {
-    Cypress.env('baseUrl', `https://gallery-api.vivifyideas.com`) // base URL for api calls
-    it('Create a new user', () => {
+    Cypress.env('baseUrl', `https://gallery-api.vivifyideas.com`)
+    it('C1 Create a new user', () => {
         Cypress.env('RandomMail', `apitest${Cypress._.random(0, 1e6)}@yopmail.com`)
         cy.request({
             method: 'POST',
@@ -21,7 +21,7 @@ describe('API test for register/login/create a gallery/search/edit/delete a gall
                 )
             });
     });
-    it('Log in with created user', () => {
+    it('C2 Log in with created user', () => {
         cy.request({
             method: 'POST',
             url: Cypress.env('baseUrl') + '/api/auth/login',
@@ -39,7 +39,7 @@ describe('API test for register/login/create a gallery/search/edit/delete a gall
                 Cypress.env('AccessToken', response.body.access_token)
             });
     });
-    it('Create a gallery', () => {
+    it('C3 Create a gallery', () => {
         Cypress.env('GalleryName', `Gallery ${Cypress._.random(0, 1e6)}`)
         cy.request({
             method: 'POST',
@@ -64,7 +64,7 @@ describe('API test for register/login/create a gallery/search/edit/delete a gall
                 Cypress.env('GalleryID', response.body.id)
             });
     });
-    it('Perform a search and find gallery we made', () => {
+    it('C4 Perform a search and find gallery we made', () => {
         cy.request({
             method: 'GET',
             url: Cypress.env('baseUrl') + '/api/galleries',
@@ -88,7 +88,7 @@ describe('API test for register/login/create a gallery/search/edit/delete a gall
                 expect(response.body.galleries[0].id).to.eq(Cypress.env('GalleryID'))
             });
     });
-    it('Edit description on the gallery we made', () => {
+    it('C5 Edit description on the gallery we made', () => {
         cy.request({
             method: 'PUT',
             url: Cypress.env('baseUrl') + '/api/galleries/' + Cypress.env('GalleryID'),
@@ -112,7 +112,7 @@ describe('API test for register/login/create a gallery/search/edit/delete a gall
                 expect(response.body.id).to.eq(Cypress.env('GalleryID'))
             });
     });
-    it('Delete the gallery we made', () => {
+    it('C6 Delete the gallery we made', () => {
         cy.request({
             method: 'Delete',
             url: Cypress.env('baseUrl') + '/api/galleries/' + Cypress.env('GalleryID'),
@@ -125,7 +125,7 @@ describe('API test for register/login/create a gallery/search/edit/delete a gall
                 expect(response.body).to.eq('1')
             });
     });
-    it('Perform another search on the galery we deleted to make sure it is no longer there', () => {
+    it('C7 Perform another search on the galery we deleted to make sure it is no longer there', () => {
         cy.request({
             method: 'GET',
             url: Cypress.env('baseUrl') + '/api/galleries',
@@ -142,7 +142,7 @@ describe('API test for register/login/create a gallery/search/edit/delete a gall
                 expect(response.body.count).to.eq(0)                
             });
     });
-    it('Do a 404 call and expect 404', () => {
+    it('C8 Do a 404 call and expect 404', () => {
         cy.request({
             method: 'POST',
             url: Cypress.env('baseUrl') + '/example',

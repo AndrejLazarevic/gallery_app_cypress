@@ -19,7 +19,7 @@ describe('Test all create gallery scenarios', () => {
         navigate.clearCookies()
         navigate.visitLogin()
         login.login(accounts.email, accounts.password)
-        cy.wait(1000)
+        cy.wait(3000)
         navigate.visitCreateGallery()
     })
     it('All elements are present on the page', () => {

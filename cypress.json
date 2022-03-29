@@ -1,6 +1,14 @@
 {
   "projectId": "4o4cc7",
-  "baseUrl": "https://gallery-app.vivifyideas.com/"
+  "baseUrl": "https://gallery-app.vivifyideas.com/",
+  "reporter": "cypress-testrail-accumulative-reporter",
+  "reporterOptions": {
+    "domain": "galleryappcypress.testrail.io",
+    "username": "andrej777lazarevic@gmail.com",
+    "password": "mPPhwu.Igo3BR5g.NY/v",
+    "projectId": 1,
+    "suiteId": 1
+  }
 }
 
 
