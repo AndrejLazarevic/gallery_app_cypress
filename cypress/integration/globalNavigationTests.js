@@ -1,13 +1,10 @@
-import loginLocators from '../locators/loginLocators.js';  
-import globalLocators from '../locators/globalLocators.js'; 
-import loginActions from '../actions/loginActions.js';  
-import navigationActions from '../actions/navigationActions.js';  
-import globalActions from '../actions/globalActions.js';
-import accounts from '../data/accounts.js';
+import loginPage from '../pages/loginPage.js';
+import navigation from '../pages/navigation.js';
+import globalMethods from '../pages/globals.js';
 
-const login = new loginActions(); 
-const navigate = new navigationActions();
-const global = new globalActions();
+const login = new loginPage(); 
+const navigate = new navigation();
+const globals = new globalMethods();
 
 describe('Test redirection of all links from global navigation', () => {
     beforeEach(() => {    
@@ -15,31 +12,17 @@ describe('Test redirection of all links from global navigation', () => {
         navigate.visitHome();
     })
     it('Proper elements are present/missing when not logged in', () => {
-        cy.get(globalLocators.loginButton).should('exist')
-        cy.get(globalLocators.registerButton).should('exist')
-        cy.get(globalLocators.allGalleriesButton).should('exist')
-        cy.get(globalLocators.homeButton).should('exist')
-        cy.get(globalLocators.logoutButton).should('not.exist')
-        cy.get(globalLocators.myGalleries).should('not.exist')
-        cy.get(globalLocators.createGallery).should('not.exist')        
+        globals.verifyElementsWhenNotLoggedIn()       
     });
     it('Proper elements are present/missing when logged in', () => {
         navigate.visitLogin()
         login.login(accounts.email, accounts.password)
-        cy.get(globalLocators.loginButton).should('exist')
-        cy.get(globalLocators.registerButton).should('exist')
-        cy.get(globalLocators.allGalleriesButton).should('exist')
-        cy.get(globalLocators.homeButton).should('exist')
-        cy.get(globalLocators.logoutButton).should('exist')
-        cy.get(globalLocators.myGalleries).should('exist')
-        cy.get(globalLocators.createGallery).should('exist')
+        globals.verifyElementsWhenLoggedIn()
     });
     it('Check Login redirection', () => {
-        global.clickLogin()
-        cy.url().should('include', '/login')
+        globals.clickLoginAndVerifyRedirection()
     });
     it('Check Register redirection', () => {
-        global.clickRegister()
-        cy.url().should('include', '/register')
+        globals.clickRegisterAndVerifyRedirection()
     });
 });

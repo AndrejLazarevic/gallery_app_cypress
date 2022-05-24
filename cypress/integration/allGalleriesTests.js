@@ -1,18 +1,11 @@
-import allGalleriesLocators from '../locators/allGalleriesLocators.js';
-import allGaleriesActions from '../actions/allGaleriesActions.js';
-import navigationActions from '../actions/navigationActions.js';
-import loginActions from '../actions/loginActions.js';  
-import createGalleryActions from '../actions/createGalleryActions.js';
-import errors from '../data/errors.js';
+import loginPage from '../pages/loginPage.js';
+import navigation from '../pages/navigation.js';
+import allGalleriesPage from '../pages/allGaleriesPage.js';
 import accounts from '../data/accounts.js';
-import images from '../data/images.js';
-import testData from '../data/testData.js';
-import dateTimeUtilities from '../utilities/dateTimeUtilities.js';
 
-const login = new loginActions(); 
-const navigate = new navigationActions();
-const createGallery = new createGalleryActions();
-const allGalleries = new allGaleriesActions();
+const login = new loginPage();
+const navigate = new navigation();
+const allGalleries = new allGalleriesPage();
 
 describe('Test all galleries screen scenarios', () => {
     beforeEach(() => {    
@@ -24,10 +17,6 @@ describe('Test all galleries screen scenarios', () => {
     })
     it('Perform invalid search and expect error', () => {
         allGalleries.performSearch('7f340f03288453493fj4733484fj2')
-        cy.get(allGalleriesLocators.noGalleriesFound).should('exist')
-        cy.get(allGalleriesLocators.boxGalleryTitle).should('not.exist')
-        cy.get(allGalleriesLocators.boxGalleryAuthor).should('not.exist')
-        cy.get(allGalleriesLocators.boxGalleryDate).should('not.exist')
-        cy.get(allGalleriesLocators.boxGalleryImage).should('not.exist')
+        allGalleries.verifyInvalidSearchElements()
     });
 });

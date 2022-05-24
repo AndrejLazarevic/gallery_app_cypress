@@ -1,17 +1,16 @@
-import createGalleryLocators from '../locators/createGalleryLocators.js';
-import allGalleriesLocators from '../locators/allGalleriesLocators.js';
-import navigationActions from '../actions/navigationActions.js';
-import loginActions from '../actions/loginActions.js';  
-import createGalleryActions from '../actions/createGalleryActions.js';
-import errors from '../data/errors.js';
+import navigation from '../pages/navigation.js';
+import loginPage from '../pages/loginPage.js';
+import createGalleryPage from '../pages/createGalleryPage.js';
 import accounts from '../data/accounts.js';
-import images from '../data/images.js';
 import testData from '../data/testData.js';
+import images from '../data/images.js';
 import dateTimeUtilities from '../utilities/dateTimeUtilities.js';
+import allGalleriesPage from '../pages/allGaleriesPage.js';
 
-const login = new loginActions(); 
-const navigate = new navigationActions();
-const createGallery = new createGalleryActions();
+const login = new loginPage();
+const navigate = new navigation();
+const createGallery = new createGalleryPage();
+const allGalleries = new allGalleriesPage();
 const dateTime = new dateTimeUtilities();
 
 describe('Test all create gallery scenarios', () => {
@@ -23,67 +22,40 @@ describe('Test all create gallery scenarios', () => {
         navigate.visitCreateGallery()
     })
     it('All elements are present on the page', () => {
-        cy.get(createGalleryLocators.createGalleryTitle).should('exist')
-        cy.get(createGalleryLocators.titleLabel).should('exist')
-        cy.get(createGalleryLocators.titleInput).should('exist')
-        cy.get(createGalleryLocators.decriptionsLabel).should('exist')
-        cy.get(createGalleryLocators.descriptionsInput).should('exist')
-        cy.get(createGalleryLocators.imagesLabel).should('exist')
-        cy.get(createGalleryLocators.imagesInput).should('exist')
-        cy.get(createGalleryLocators.addImageButton).should('exist')
-        cy.get(createGalleryLocators.submitButton).should('exist')
-        cy.get(createGalleryLocators.cancelButton).should('exist')
+        createGallery.verifyAllElementsExist()
 
     });
     it('Try to submit blank gallery and expect title error', () => {
         createGallery.blankCreateGallery()
-        cy.get(createGalleryLocators.titleInput).then((titleInput) => {
-            expect(titleInput[0].validationMessage).to.eq(errors.blankField)
-        })
+        createGallery.verifyTitleError()
     });
     it('Try to submit gallery without url and expect url error', () => {
         createGallery.createGalleryJustTitle('Some Title')
-        cy.get(createGalleryLocators.imagesInput).then((imageInput) => {
-            expect(imageInput[0].validationMessage).to.eq(errors.blankField)
-        })
+        createGallery.verifyBlankUrlError()
     })
     it('Try to submit gallery with invalid url and expect errors', () => {
-        createGallery.createGallery1Image('Some Title', 'Some Description', 'ivlaidurl')
-        cy.get(createGalleryLocators.imagesInput).then((imageInput) => {
-            expect(imageInput[0].validationMessage).to.eq(errors.invalidUrl)
-        })
+        createGallery.createGalleryWith1Image('Some Title', 'Some Description', 'ivlaidurl')
+        createGallery.verifyInvalidUrlError()
     })
     it('Try to submit gallery with invalid image format and small title and expect errors', () => {
-        createGallery.createGallery1Image(testData.smallGalleryTitle, 'Some Description', images.invalidImage)
-        cy.get(createGalleryLocators.errorMessage).eq(0).should('have.text', errors.galleryTitleTooSmall)
-        cy.get(createGalleryLocators.errorMessage).eq(1).should('have.text', errors.invalidImageFormat)
-        
+        createGallery.createGalleryWith1Image(testData.smallGalleryTitle, 'Some Description', images.invalidImage)
+        createGallery.verifySmallTitleAndInvalidImageFormatError()        
     })
     it('Try to submit gallery with invalid image format and big title and expect errors', () => {
-        createGallery.createGallery1Image(testData.bigGalleryTitle, 'Some Description', images.invalidImage)
-        cy.get(createGalleryLocators.errorMessage).eq(0).should('have.text', errors.galleryTitleTooBig)
-        cy.get(createGalleryLocators.errorMessage).eq(1).should('have.text', errors.invalidImageFormat)
+        createGallery.createGalleryWith1Image(testData.bigGalleryTitle, 'Some Description', images.invalidImage)
+        createGallery.verifyBigTitleAndInvalidImageFormatError()
     })
     it('Add image and check for new input and delete button', () => {
         createGallery.addImage(images.image1)
-        cy.get(createGalleryLocators.deleteImageButton).should('exist').its('length').should('be.eq', 2)
-        cy.get(createGalleryLocators.imagesInput).should('exist').its('length').should('be.eq', 2)
+        createGallery.verifyNewInputAndDeleteButtonExistOnThePage()
     })
-    it('Create gallery with one image', () => {
+    it('Create gallery with one image and verify it', () => {
         let galleryTitle = testData.randomGalleryTitle
-        createGallery.createGallery1Image(galleryTitle, 'Some Description', images.image1)
-        cy.get(allGalleriesLocators.allGalleriesTitle).should('exist')
-        cy.get(allGalleriesLocators.boxGalleryTitle).eq(0).then((title) => {
-            expect(title.text().trim()).to.eq(galleryTitle)
-        })
-        cy.get(allGalleriesLocators.boxGalleryAuthorLink).eq(0).then((authorLink) => {
-            expect(authorLink.text().trim()).to.eq(accounts.accountName)
-        })
-        cy.get(allGalleriesLocators.boxGalleryDate).eq(0).then((date) => {
-            expect(date.text().trim()).to.eq("Created at: " + dateTime.currentDate())
-        })
-        cy.get(allGalleriesLocators.boxGalleryImage).eq(0).invoke('attr', 'src').then((image) => {
-            expect(image).to.eq(images.image1)
-        })
+        let galleryDescription = 'Some Description'
+        let galleryImage = images.image1
+        let galleryCreationDate = dateTime.currentDate()
+
+        createGallery.createGalleryWith1Image(galleryTitle, galleryDescription, galleryImage)
+        allGalleries.verifyGalleryWith1ImageIsCreated(galleryTitle, galleryImage, galleryCreationDate)
     })
 });

@@ -1,4 +1,5 @@
-class navigationActions {
+// methods //
+class navigation {
     clearCookies() {
         cy.clearCookies().wait(100)
     }
@@ -18,5 +19,4 @@ class navigationActions {
         cy.url().should('include', '/create')
     }
 }
-
-export default  navigationActions;
+export default navigation;

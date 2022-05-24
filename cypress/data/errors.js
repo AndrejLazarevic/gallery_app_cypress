@@ -1,5 +1,5 @@
 export default {
-    blankField: 'Please fill out this field.',
+    blankField: 'Please fill in this field.',
     incorrectEmailFormat(emailEntry) {
         if (Cypress.isBrowser('firefox')) {
             return `Please enter an email address.`            
