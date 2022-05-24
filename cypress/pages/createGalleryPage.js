@@ -1,6 +1,5 @@
 import errors from '../data/errors.js';
 
-
 // locators //
 const createGalleryTitle = 'h1.title-style:contains("Create Gallery")'
 const titleLabel = 'label[for="title"]'

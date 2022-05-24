@@ -23,7 +23,6 @@ describe('Test all create gallery scenarios', () => {
     })
     it('All elements are present on the page', () => {
         createGallery.verifyAllElementsExist()
-
     });
     it('Try to submit blank gallery and expect title error', () => {
         createGallery.blankCreateGallery()
